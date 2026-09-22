@@ -205,7 +205,7 @@
             border: 1px solid var(--separator);
             padding: 10px 14px;
             border-radius: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -227,6 +227,43 @@
             background: white;
             color: var(--text);
             outline: none;
+        }
+
+        /* Desain Modern Grid Tombol Minggu (Fit di Layar HP) */
+        .week-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin-bottom: 14px;
+        }
+
+        .week-btn {
+            background: #f0f0f5;
+            color: var(--text);
+            border: 1px solid var(--separator);
+            padding: 8px 2px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .week-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 3px 8px rgba(0, 122, 255, 0.25);
+        }
+
+        .week-btn span {
+            display: block;
+            font-size: 0.55rem;
+            font-weight: 500;
+            opacity: 0.85;
+            margin-top: 1px;
         }
 
         .segmented-control {
@@ -257,59 +294,79 @@
             box-shadow: 0 3px 8px rgba(0,0,0,0.08);
         }
 
-        .history-item {
+        /* Kartu Riwayat Modern */
+        .history-card {
             background: #fafafc;
             border: 1px solid var(--separator);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
-        .history-header {
+        .history-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
-            color: var(--primary);
-            font-weight: 700;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 1px solid var(--separator);
-            padding-bottom: 6px;
         }
 
-        .history-body {
+        .history-date-info {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .history-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 6px;
-            font-size: 0.85rem;
-        }
-
-        .history-body.with-lab {
             grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
-        .history-metric span {
+        .history-metric-box {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.04);
+            padding: 8px 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .history-metric-box.full-width {
+            grid-column: span 2;
+        }
+
+        .history-metric-box span {
+            font-size: 0.7rem;
             color: var(--text-muted);
-            font-size: 0.72rem;
-            display: block;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .history-metric-box strong {
+            font-size: 0.9rem;
+            color: var(--text);
         }
 
         .badge {
             display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2px 8px;
+            border-radius: 6px;
             font-size: 0.65rem;
             font-weight: 700;
-            color: white;
+            color: #ffffff !important;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 4px;
+            align-self: flex-start;
+            letter-spacing: 0.3px;
         }
 
-        .bg-normal { background-color: var(--success); }
-        .bg-warning { background-color: var(--warning); }
-        .bg-danger { background-color: var(--danger); }
+        .bg-normal { background-color: #34c759; }
+        .bg-warning { background-color: #ff9500; }
+        .bg-danger { background-color: #ff3b30; }
 
         .report-box {
             display: grid;
@@ -336,9 +393,10 @@
 
         .stat-card p {
             margin: 0;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--primary);
+            text-align: right;
         }
 
         .delete-btn {
@@ -347,10 +405,28 @@
             border: none;
             padding: 4px 10px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             width: auto;
             box-shadow: none;
+        }
+
+        .chart-container-box {
+            background: #fafafc;
+            border: 1px solid var(--separator);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .chart-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
     </style>
 </head>
@@ -392,16 +468,14 @@
                 </div>
             </div>
 
-            <!-- Tombol Toggle Kolesterol / Lab Bulanan -->
             <button type="button" class="toggle-lab-btn" id="toggleLabBtn" onclick="toggleLabSection()">
-                + Tambah Data Lab / Kolesterol & Gula Darah (Opsional)
+                + Tambah Data Lab (Kolesterol, Gula, Urat) (Opsional)
             </button>
 
-            <!-- Bagian Lab Tersembunyi agar Form Tidak Panjang -->
             <div class="lab-section" id="labSection">
                 <div class="form-grid" style="margin-bottom: 0;">
                     <div class="form-group">
-                        <label>Kolesterol Tot</label>
+                        <label>Kolesterol Total</label>
                         <input type="number" id="cholTotal" placeholder="200">
                     </div>
                     <div class="form-group">
@@ -409,15 +483,15 @@
                         <input type="number" id="bloodSugar" placeholder="100">
                     </div>
                     <div class="form-group">
-                        <label>Asam Urat</label>
+                        <label>Asam Urat (mg/dL)</label>
                         <input type="number" step="0.1" id="uricInput" placeholder="5.5">
                     </div>
                     <div class="form-group">
-                        <label>HDL</label>
+                        <label>HDL (mg/dL)</label>
                         <input type="number" id="cholHdl" placeholder="50">
                     </div>
                     <div class="form-group">
-                        <label>LDL</label>
+                        <label>LDL (mg/dL)</label>
                         <input type="number" id="cholLdl" placeholder="100">
                     </div>
                 </div>
@@ -435,6 +509,16 @@
             <select id="monthFilter" onchange="updateUI()">
                 <option value="all">Semua Bulan (Keseluruhan)</option>
             </select>
+        </div>
+
+        <!-- Tombol Filter Minggu Modern (Fit 6 Kolom di Layar) -->
+        <div class="week-filter-grid">
+            <button class="week-btn active" onclick="setWeekFilter('all', event)">Semua<span>Bulan</span></button>
+            <button class="week-btn" onclick="setWeekFilter(1, event)">W 1<span>1-7</span></button>
+            <button class="week-btn" onclick="setWeekFilter(2, event)">W 2<span>8-14</span></button>
+            <button class="week-btn" onclick="setWeekFilter(3, event)">W 3<span>15-21</span></button>
+            <button class="week-btn" onclick="setWeekFilter(4, event)">W 4<span>22-28</span></button>
+            <button class="week-btn" onclick="setWeekFilter(5, event)">W 5<span>29+</span></button>
         </div>
 
         <div class="segmented-control">
@@ -455,11 +539,36 @@
             <div id="historyCardList"></div>
         </div>
 
-        <!-- Tab Grafik -->
+        <!-- Tab Grafik Terpisah -->
         <div id="chart" class="tab-content" style="display:none;">
-            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Grafik Tren Tensi & Lab</h3>
-            <div style="position: relative; height:260px; width:100%">
-                <canvas id="healthChart"></canvas>
+            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Grafik Tren Analisa Kesehatan</h3>
+            
+            <div class="chart-container-box">
+                <div class="chart-title">📈 Tren Tekanan Darah (mmHg)</div>
+                <div style="position: relative; height:200px; width:100%">
+                    <canvas id="chartTensi"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container-box">
+                <div class="chart-title">🧪 Tren Kolesterol (mg/dL)</div>
+                <div style="position: relative; height:200px; width:100%">
+                    <canvas id="chartKolesterol"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container-box">
+                <div class="chart-title">🩸 Tren Gula Darah (mg/dL)</div>
+                <div style="position: relative; height:200px; width:100%">
+                    <canvas id="chartGulaDarah"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container-box">
+                <div class="chart-title">⚖️ Tren Asam Urat (mg/dL)</div>
+                <div style="position: relative; height:200px; width:100%">
+                    <canvas id="chartAsamUrat"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -469,14 +578,18 @@
     document.getElementById('dateInput').valueAsDate = new Date();
 
     let healthData = JSON.parse(localStorage.getItem('healthData')) || [];
-    let myChart = null;
+    let currentWeekFilter = 'all';
+    let chartTensiInstance = null;
+    let chartKolesterolInstance = null;
+    let chartGulaInstance = null;
+    let chartUricInstance = null;
 
     function toggleLabSection() {
         const labSec = document.getElementById('labSection');
         const btn = document.getElementById('toggleLabBtn');
         if (labSec.style.display === 'block') {
             labSec.style.display = 'none';
-            btn.textContent = '+ Tambah Data Lab / Kolesterol & Gula Darah (Opsional)';
+            btn.textContent = '+ Tambah Data Lab (Kolesterol, Gula, Urat) (Opsional)';
         } else {
             labSec.style.display = 'block';
             btn.textContent = '- Sembunyikan Data Lab';
@@ -514,7 +627,7 @@
         this.reset();
         document.getElementById('dateInput').valueAsDate = new Date();
         document.getElementById('labSection').style.display = 'none';
-        document.getElementById('toggleLabBtn').textContent = '+ Tambah Data Lab / Kolesterol & Gula Darah (Opsional)';
+        document.getElementById('toggleLabBtn').textContent = '+ Tambah Data Lab (Kolesterol, Gula, Urat) (Opsional)';
         updateUI();
     });
 
@@ -532,7 +645,14 @@
         document.getElementById(tabId).style.display = 'block';
         event.currentTarget.classList.add('active');
 
-        if(tabId === 'chart') renderChart();
+        if(tabId === 'chart') renderCharts();
+    }
+
+    function setWeekFilter(weekNum, event) {
+        currentWeekFilter = weekNum;
+        document.querySelectorAll('.week-btn').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        updateUI();
     }
 
     function exportToExcel() {
@@ -629,31 +749,86 @@
     }
 
     function getFilteredData() {
-        const val = document.getElementById('monthFilter').value;
-        if (val === 'all') return healthData;
-        return healthData.filter(i => i.date && i.date.startsWith(val));
+        const monthVal = document.getElementById('monthFilter').value;
+        let data = healthData;
+
+        if (monthVal !== 'all') {
+            data = data.filter(i => i.date && i.date.startsWith(monthVal));
+        }
+
+        if (currentWeekFilter !== 'all') {
+            data = data.filter(i => {
+                if (!i.date) return false;
+                const dayOfMonth = new Date(i.date).getDate();
+                if (currentWeekFilter === 1) return dayOfMonth >= 1 && dayOfMonth <= 7;
+                if (currentWeekFilter === 2) return dayOfMonth >= 8 && dayOfMonth <= 14;
+                if (currentWeekFilter === 3) return dayOfMonth >= 15 && dayOfMonth <= 21;
+                if (currentWeekFilter === 4) return dayOfMonth >= 22 && dayOfMonth <= 28;
+                if (currentWeekFilter === 5) return dayOfMonth >= 29;
+                return true;
+            });
+        }
+
+        return data;
     }
 
     function getStatusBadge(val, type) {
         if (!val && val !== 0) return '';
+        
         if(type === 'sys') {
             if(val < 120) return '<span class="badge bg-normal">Normal</span>';
             if(val < 140) return '<span class="badge bg-warning">Pre-Hipertensi</span>';
             return '<span class="badge bg-danger">Hipertensi</span>';
         }
-        if(type === 'uric') {
-            if(val <= 6.0) return '<span class="badge bg-normal">Normal</span>';
-            return '<span class="badge bg-danger">Tinggi</span>';
-        }
         if(type === 'cholTotal') {
             if(val < 200) return '<span class="badge bg-normal">Normal</span>';
-            if(val < 240) return '<span class="badge bg-warning">Batas</span>';
+            if(val <= 239) return '<span class="badge bg-warning">Batas Tinggi</span>';
             return '<span class="badge bg-danger">Tinggi</span>';
+        }
+        if(type === 'hdl') {
+            if(val < 40) return '<span class="badge bg-danger">Rendah</span>';
+            if(val >= 60) return '<span class="badge bg-normal">Tinggi (Optimal)</span>';
+            return '<span class="badge bg-normal">Normal</span>';
+        }
+        if(type === 'ldl') {
+            if(val < 100) return '<span class="badge bg-normal">Optimal</span>';
+            if(val <= 129) return '<span class="badge bg-normal">Mendekati Optimal</span>';
+            if(val <= 159) return '<span class="badge bg-warning">Batas Tinggi</span>';
+            if(val <= 189) return '<span class="badge bg-danger">Tinggi</span>';
+            return '<span class="badge bg-danger">Sangat Tinggi</span>';
+        }
+        if(type === 'uric') {
+            if(val >= 3.5 && val <= 7.2) return '<span class="badge bg-normal">Normal</span>';
+            return '<span class="badge bg-danger">Di Luar Rentang</span>';
         }
         if(type === 'bloodSugar') {
             if(val < 100) return '<span class="badge bg-normal">Normal</span>';
             if(val < 126) return '<span class="badge bg-warning">Prediabetes</span>';
-            return '<span class="badge bg-danger">Tinggi</span>';
+            return '<span class="badge bg-danger">Diagnosis DM</span>';
+        }
+        return '';
+    }
+
+    function getStatusTextPlain(val, type) {
+        if (!val && val !== 0) return '';
+        if(type === 'sys') {
+            if(val < 120) return 'normal';
+            if(val < 140) return 'pre-hipertensi';
+            return 'hipertensi';
+        }
+        if(type === 'cholTotal') {
+            if(val < 200) return 'normal';
+            if(val <= 239) return 'batas tinggi';
+            return 'tinggi';
+        }
+        if(type === 'bloodSugar') {
+            if(val < 100) return 'normal';
+            if(val < 126) return 'prediabetes';
+            return 'diagnosis dm';
+        }
+        if(type === 'uric') {
+            if(val >= 3.5 && val <= 7.2) return 'normal';
+            return 'di luar rentang';
         }
         return '';
     }
@@ -671,30 +846,39 @@
             filtered.forEach(item => {
                 const hasLab = item.cholTotal > 0 || item.uric > 0 || item.cholHdl > 0 || item.cholLdl > 0 || item.bloodSugar > 0;
                 const div = document.createElement('div');
-                div.className = 'history-item';
+                div.className = 'history-card';
                 
-                let labHtml = '';
+                let labGridHtml = '';
                 if (hasLab) {
-                    labHtml = `
-                        <div class="history-metric" style="border-top: 1px dashed var(--separator); padding-top: 6px; margin-top: 4px; grid-column: span 2;">
-                            <span>Hasil Lab (Kolesterol, Urat, Gula Darah)</span>
-                            <strong>Tot: ${item.cholTotal || '-'}</strong> | <strong>Urat: ${item.uric || '-'}</strong> | <strong>Gula: ${item.bloodSugar || '-'}</strong> ${getStatusBadge(item.bloodSugar, 'bloodSugar')}
-                        </div>
-                    `;
+                    if (item.cholTotal > 0) {
+                        labGridHtml += `<div class="history-metric-box"><span>Kolesterol Total</span><strong>${item.cholTotal} mg/dL</strong>${getStatusBadge(item.cholTotal, 'cholTotal')}</div>`;
+                    }
+                    if (item.cholHdl > 0) {
+                        labGridHtml += `<div class="history-metric-box"><span>HDL</span><strong>${item.cholHdl} mg/dL</strong>${getStatusBadge(item.cholHdl, 'hdl')}</div>`;
+                    }
+                    if (item.cholLdl > 0) {
+                        labGridHtml += `<div class="history-metric-box"><span>LDL</span><strong>${item.cholLdl} mg/dL</strong>${getStatusBadge(item.cholLdl, 'ldl')}</div>`;
+                    }
+                    if (item.bloodSugar > 0) {
+                        labGridHtml += `<div class="history-metric-box"><span>Gula Darah</span><strong>${item.bloodSugar} mg/dL</strong>${getStatusBadge(item.bloodSugar, 'bloodSugar')}</div>`;
+                    }
+                    if (item.uric > 0) {
+                        labGridHtml += `<div class="history-metric-box"><span>Asam Urat</span><strong>${item.uric} mg/dL</strong>${getStatusBadge(item.uric, 'uric')}</div>`;
+                    }
                 }
 
                 div.innerHTML = `
-                    <div class="history-header">
-                        <span>${item.timestamp}</span>
+                    <div class="history-card-header">
+                        <span class="history-date-info">📅 ${item.timestamp}</span>
                         <button onclick="deleteData(${item.id})" class="delete-btn">Hapus</button>
                     </div>
-                    <div class="history-body ${hasLab ? 'with-lab' : ''}">
-                        <div class="history-metric">
+                    <div class="history-grid">
+                        <div class="history-metric-box ${!hasLab ? 'full-width' : ''}">
                             <span>Tekanan Darah</span>
-                            <strong>${item.sys} / ${item.dia} mmHg</strong> ${getStatusBadge(item.sys, 'sys')}
+                            <strong>${item.sys} / ${item.dia} mmHg</strong>
+                            ${getStatusBadge(item.sys, 'sys')}
                         </div>
-                        ${!hasLab ? '<div class="history-metric"><span>Catatan Lab</span><strong>Tidak ada (Harian)</strong></div>' : ''}
-                        ${labHtml}
+                        ${labGridHtml}
                     </div>
                 `;
                 listContainer.appendChild(div);
@@ -703,87 +887,123 @@
 
         const summaryBox = document.getElementById('summaryStats');
         const selectedOptionText = document.getElementById('monthFilter').selectedOptions[0].text;
-        document.getElementById('summaryTitle').textContent = `Rata-rata: ${selectedOptionText}`;
+        const weekText = currentWeekFilter === 'all' ? 'Semua Minggu' : `Week ${currentWeekFilter}`;
+        document.getElementById('summaryTitle').textContent = `Rata-rata: ${selectedOptionText} (${weekText})`;
 
         if(filtered.length === 0) {
             summaryBox.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center;">Data tidak cukup untuk dihitung.</p>`;
         } else {
             const avgSys = Math.round(filtered.reduce((a, c) => a + c.sys, 0) / filtered.length);
             const avgDia = Math.round(filtered.reduce((a, c) => a + c.dia, 0) / filtered.length);
+            const tensiStatus = getStatusTextPlain(avgSys, 'sys');
+            const tensiBadgeHtml = getStatusBadge(avgSys, 'sys');
             
+            const cholFiltered = filtered.filter(i => i.cholTotal > 0);
+            const avgChol = cholFiltered.length > 0 ? Math.round(cholFiltered.reduce((a, c) => a + c.cholTotal, 0) / cholFiltered.length) : null;
+            const cholStatus = avgChol !== null ? getStatusTextPlain(avgChol, 'cholTotal') : '';
+            const cholBadgeHtml = avgChol !== null ? getStatusBadge(avgChol, 'cholTotal') : '';
+
             const sugarFiltered = filtered.filter(i => i.bloodSugar > 0);
-            const avgSugar = sugarFiltered.length > 0 ? Math.round(sugarFiltered.reduce((a, c) => a + c.bloodSugar, 0) / sugarFiltered.length) : '-';
+            const avgSugar = sugarFiltered.length > 0 ? Math.round(sugarFiltered.reduce((a, c) => a + c.bloodSugar, 0) / sugarFiltered.length) : null;
+            const sugarStatus = avgSugar !== null ? getStatusTextPlain(avgSugar, 'bloodSugar') : '';
+            const sugarBadgeHtml = avgSugar !== null ? getStatusBadge(avgSugar, 'bloodSugar') : '';
             
             const uricFiltered = filtered.filter(i => i.uric > 0);
-            const avgUric = uricFiltered.length > 0 ? (uricFiltered.reduce((a, c) => a + c.uric, 0) / uricFiltered.length).toFixed(1) : '-';
+            const avgUric = uricFiltered.length > 0 ? Number((uricFiltered.reduce((a, c) => a + c.uric, 0) / uricFiltered.length).toFixed(1)) : null;
+            const uricStatus = avgUric !== null ? getStatusTextPlain(avgUric, 'uric') : '';
+            const uricBadgeHtml = avgUric !== null ? getStatusBadge(avgUric, 'uric') : '';
 
             summaryBox.innerHTML = `
                 <div class="stat-card">
-                    <h3>Rata-rata Tensi</h3>
-                    <p>${avgSys} / ${avgDia} <span style="font-size:0.75rem; color:var(--text-muted);">mmHg</span></p>
+                    <div>
+                        <h3>Rata-rata Tensi</h3>
+                        <span style="font-size:0.7rem; color:var(--text-muted); text-transform:capitalize;">(${tensiStatus})</span>
+                    </div>
+                    <p>${avgSys} / ${avgDia} mmHg ${tensiBadgeHtml}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Rata-rata Gula Darah</h3>
-                    <p>${avgSugar} <span style="font-size:0.75rem; color:var(--text-muted);">mg/dL</span></p>
+                    <div>
+                        <h3>Rata-rata Kolesterol Total</h3>
+                        <span style="font-size:0.7rem; color:var(--text-muted); text-transform:capitalize;">(${cholStatus || '-'})</span>
+                    </div>
+                    <p>${avgChol !== null ? avgChol + ' mg/dL ' + cholBadgeHtml : '-'}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Rata-rata Asam Urat</h3>
-                    <p>${avgUric} <span style="font-size:0.75rem; color:var(--text-muted);">mg/dL</span></p>
+                    <div>
+                        <h3>Rata-rata Gula Darah</h3>
+                        <span style="font-size:0.7rem; color:var(--text-muted); text-transform:capitalize;">(${sugarStatus || '-'})</span>
+                    </div>
+                    <p>${avgSugar !== null ? avgSugar + ' mg/dL ' + sugarBadgeHtml : '-'}</p>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <h3>Rata-rata Asam Urat</h3>
+                        <span style="font-size:0.7rem; color:var(--text-muted); text-transform:capitalize;">(${uricStatus || '-'})</span>
+                    </div>
+                    <p>${avgUric !== null ? avgUric + ' mg/dL ' + uricBadgeHtml : '-'}</p>
                 </div>
             `;
         }
 
         if(document.getElementById('chart').style.display === 'block') {
-            renderChart();
+            renderCharts();
         }
     }
 
-    function renderChart() {
-        const ctx = document.getElementById('healthChart').getContext('2d');
+    function renderCharts() {
         const sorted = [...getFilteredData()].sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        if(myChart) myChart.destroy();
+        const labels = sorted.map(i => i.date);
 
-        myChart = new Chart(ctx, {
+        if(chartTensiInstance) chartTensiInstance.destroy();
+        if(chartKolesterolInstance) chartKolesterolInstance.destroy();
+        if(chartGulaInstance) chartGulaInstance.destroy();
+        if(chartUricInstance) chartUricInstance.destroy();
+
+        chartTensiInstance = new Chart(document.getElementById('chartTensi').getContext('2d'), {
             type: 'line',
             data: {
-                labels: sorted.map(i => i.date),
+                labels: labels,
                 datasets: [
-                    {
-                        label: 'Sistolik',
-                        data: sorted.map(i => i.sys),
-                        borderColor: '#ff3b30',
-                        backgroundColor: 'rgba(255, 59, 48, 0.05)',
-                        borderWidth: 2.5,
-                        tension: 0.3,
-                        fill: true
-                    },
-                    {
-                        label: 'Gula Darah',
-                        data: sorted.map(i => i.bloodSugar > 0 ? i.bloodSugar : null),
-                        borderColor: '#34c759',
-                        backgroundColor: 'rgba(52, 199, 89, 0.05)',
-                        borderWidth: 2.5,
-                        tension: 0.3,
-                        spanGaps: true,
-                        fill: false
-                    }
+                    { label: 'Sistolik', data: sorted.map(i => i.sys), borderColor: '#ff3b30', backgroundColor: 'rgba(255, 59, 48, 0.05)', borderWidth: 2.5, tension: 0.3, fill: true },
+                    { label: 'Diastolik', data: sorted.map(i => i.dia), borderColor: '#007aff', backgroundColor: 'rgba(0, 122, 255, 0.05)', borderWidth: 2.5, tension: 0.3, fill: true }
                 ]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f1f1f5' } },
-                    x: { grid: { display: false } }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 600 } }
-                    }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f1f5' } }, x: { grid: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 600 } } } } }
+        });
+
+        chartKolesterolInstance = new Chart(document.getElementById('chartKolesterol').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Kolesterol Total', data: sorted.map(i => i.cholTotal > 0 ? i.cholTotal : null), borderColor: '#ff9500', backgroundColor: 'rgba(255, 149, 0, 0.05)', borderWidth: 2.5, tension: 0.3, spanGaps: true, fill: true },
+                    { label: 'HDL', data: sorted.map(i => i.cholHdl > 0 ? i.cholHdl : null), borderColor: '#34c759', backgroundColor: 'rgba(52, 199, 89, 0.05)', borderWidth: 2, tension: 0.3, spanGaps: true, fill: false },
+                    { label: 'LDL', data: sorted.map(i => i.cholLdl > 0 ? i.cholLdl : null), borderColor: '#af52de', backgroundColor: 'rgba(175, 82, 222, 0.05)', borderWidth: 2, tension: 0.3, spanGaps: true, fill: false }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f1f5' } }, x: { grid: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 600 } } } } }
+        });
+
+        chartGulaInstance = new Chart(document.getElementById('chartGulaDarah').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Gula Darah', data: sorted.map(i => i.bloodSugar > 0 ? i.bloodSugar : null), borderColor: '#34c759', backgroundColor: 'rgba(52, 199, 89, 0.08)', borderWidth: 2.5, tension: 0.3, spanGaps: true, fill: true }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f1f5' } }, x: { grid: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 600 } } } } }
+        });
+
+        chartUricInstance = new Chart(document.getElementById('chartAsamUrat').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Asam Urat', data: sorted.map(i => i.uric > 0 ? i.uric : null), borderColor: '#5856d6', backgroundColor: 'rgba(88, 86, 214, 0.08)', borderWidth: 2.5, tension: 0.3, spanGaps: true, fill: true }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f1f5' } }, x: { grid: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 600 } } } } }
         });
     }
 
@@ -792,3 +1012,5 @@
 
 </body>
 </html>
+
+```
