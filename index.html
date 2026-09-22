@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Denny Ristyanto Health Tracker</title>
+    <title>Health Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -19,7 +19,6 @@
             --danger: #ff3b30;
             --success: #34c759;
             --warning: #ff9500;
-            --excel: #34c759;
             --radius: 14px;
         }
 
@@ -172,6 +171,35 @@
             border: none;
         }
 
+        .toggle-lab-btn {
+            background: #f0f0f5;
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .lab-section {
+            display: none;
+            background: #f8f8fa;
+            border: 1px solid var(--separator);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .filter-section {
             background: #f8f8fa;
             border: 1px solid var(--separator);
@@ -253,9 +281,13 @@
 
         .history-body {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 6px;
             font-size: 0.85rem;
+        }
+
+        .history-body.with-lab {
+            grid-template-columns: 1fr 1fr;
         }
 
         .history-metric span {
@@ -326,8 +358,8 @@
 
 <div class="container">
     <header>
-        <h1>Denny's Health Tracker</h1>
-        <p>Aplikasi Pantau Kesehatan Harian</p>
+        <h1>Health Tracker</h1>
+        <p>Pantau Tekanan Darah & Lab Harian</p>
     </header>
 
     <!-- Tombol Import & Export -->
@@ -341,9 +373,9 @@
         </button>
     </div>
 
-    <!-- Form Input Harian -->
+    <!-- Form Input Harian (Ringkas) -->
     <div class="card">
-        <h3>Input Data Kesehatan</h3>
+        <h3>Input Data Harian</h3>
         <form id="healthForm">
             <div class="form-grid">
                 <div class="form-group full">
@@ -351,30 +383,46 @@
                     <input type="date" id="dateInput" required>
                 </div>
                 <div class="form-group">
-                    <label>Sys (mmHg)</label>
+                    <label>Sistolik (Sys)</label>
                     <input type="number" id="sysInput" placeholder="120" required>
                 </div>
                 <div class="form-group">
-                    <label>Dia (mmHg)</label>
+                    <label>Diastolik (Dia)</label>
                     <input type="number" id="diaInput" placeholder="80" required>
                 </div>
-                <div class="form-group">
-                    <label>Kolesterol Tot</label>
-                    <input type="number" id="cholTotal" placeholder="200">
-                </div>
-                <div class="form-group">
-                    <label>Asam Urat</label>
-                    <input type="number" step="0.1" id="uricInput" placeholder="5.5">
-                </div>
-                <div class="form-group">
-                    <label>HDL</label>
-                    <input type="number" id="cholHdl" placeholder="50">
-                </div>
-                <div class="form-group">
-                    <label>LDL</label>
-                    <input type="number" id="cholLdl" placeholder="100">
+            </div>
+
+            <!-- Tombol Toggle Kolesterol / Lab Bulanan -->
+            <button type="button" class="toggle-lab-btn" id="toggleLabBtn" onclick="toggleLabSection()">
+                + Tambah Data Lab / Kolesterol & Gula Darah (Opsional)
+            </button>
+
+            <!-- Bagian Lab Tersembunyi agar Form Tidak Panjang -->
+            <div class="lab-section" id="labSection">
+                <div class="form-grid" style="margin-bottom: 0;">
+                    <div class="form-group">
+                        <label>Kolesterol Tot</label>
+                        <input type="number" id="cholTotal" placeholder="200">
+                    </div>
+                    <div class="form-group">
+                        <label>Gula Darah (mg/dL)</label>
+                        <input type="number" id="bloodSugar" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Asam Urat</label>
+                        <input type="number" step="0.1" id="uricInput" placeholder="5.5">
+                    </div>
+                    <div class="form-group">
+                        <label>HDL</label>
+                        <input type="number" id="cholHdl" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label>LDL</label>
+                        <input type="number" id="cholLdl" placeholder="100">
+                    </div>
                 </div>
             </div>
+
             <button type="submit">Simpan Catatan</button>
         </form>
     </div>
@@ -401,7 +449,7 @@
             <div class="report-box" id="summaryStats"></div>
         </div>
 
-        <!-- Tab Riwayat (Card-based untuk layar kecil iPhone) -->
+        <!-- Tab Riwayat -->
         <div id="history" class="tab-content" style="display:none;">
             <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Daftar Catatan Masuk</h3>
             <div id="historyCardList"></div>
@@ -409,7 +457,7 @@
 
         <!-- Tab Grafik -->
         <div id="chart" class="tab-content" style="display:none;">
-            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Grafik Tren Tensi & Asam Urat</h3>
+            <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Grafik Tren Tensi & Lab</h3>
             <div style="position: relative; height:260px; width:100%">
                 <canvas id="healthChart"></canvas>
             </div>
@@ -422,6 +470,18 @@
 
     let healthData = JSON.parse(localStorage.getItem('healthData')) || [];
     let myChart = null;
+
+    function toggleLabSection() {
+        const labSec = document.getElementById('labSection');
+        const btn = document.getElementById('toggleLabBtn');
+        if (labSec.style.display === 'block') {
+            labSec.style.display = 'none';
+            btn.textContent = '+ Tambah Data Lab / Kolesterol & Gula Darah (Opsional)';
+        } else {
+            labSec.style.display = 'block';
+            btn.textContent = '- Sembunyikan Data Lab';
+        }
+    }
 
     document.getElementById('healthForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -442,7 +502,8 @@
             cholTotal: Number(document.getElementById('cholTotal').value) || 0,
             cholHdl: Number(document.getElementById('cholHdl').value) || 0,
             cholLdl: Number(document.getElementById('cholLdl').value) || 0,
-            uric: Number(document.getElementById('uricInput').value) || 0
+            uric: Number(document.getElementById('uricInput').value) || 0,
+            bloodSugar: Number(document.getElementById('bloodSugar').value) || 0
         };
 
         healthData.push(newData);
@@ -452,6 +513,8 @@
         alert('Data berhasil disimpan!');
         this.reset();
         document.getElementById('dateInput').valueAsDate = new Date();
+        document.getElementById('labSection').style.display = 'none';
+        document.getElementById('toggleLabBtn').textContent = '+ Tambah Data Lab / Kolesterol & Gula Darah (Opsional)';
         updateUI();
     });
 
@@ -478,9 +541,9 @@
             return;
         }
 
-        let csvContent = "\uFEFFWaktu,Tanggal,Hari,Sistolik,Diastolik,Kolesterol Total,HDL,LDL,Asam Urat\n";
+        let csvContent = "\uFEFFWaktu,Tanggal,Hari,Sistolik,Diastolik,Kolesterol Total,HDL,LDL,Asam Urat,Gula Darah\n";
         healthData.forEach(item => {
-            csvContent += `"${item.timestamp}","${item.date}","${item.day}",${item.sys},${item.dia},${item.cholTotal},${item.cholHdl},${item.cholLdl},${item.uric}\n`;
+            csvContent += `"${item.timestamp}","${item.date}","${item.day}",${item.sys},${item.dia},${item.cholTotal},${item.cholHdl},${item.cholLdl},${item.uric},${item.bloodSugar}\n`;
         });
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -528,7 +591,8 @@
                         cholTotal: Number(row[5]) || 0,
                         cholHdl: Number(row[6]) || 0,
                         cholLdl: Number(row[7]) || 0,
-                        uric: Number(row[8]) || 0
+                        uric: Number(row[8]) || 0,
+                        bloodSugar: Number(row[9]) || 0
                     });
                     count++;
                 }
@@ -586,6 +650,11 @@
             if(val < 240) return '<span class="badge bg-warning">Batas</span>';
             return '<span class="badge bg-danger">Tinggi</span>';
         }
+        if(type === 'bloodSugar') {
+            if(val < 100) return '<span class="badge bg-normal">Normal</span>';
+            if(val < 126) return '<span class="badge bg-warning">Prediabetes</span>';
+            return '<span class="badge bg-danger">Tinggi</span>';
+        }
         return '';
     }
 
@@ -593,7 +662,6 @@
         populateMonthDropdown();
         const filtered = getFilteredData();
         
-        // Update List Riwayat (Card Layout khusus Mobile)
         const listContainer = document.getElementById('historyCardList');
         listContainer.innerHTML = '';
         
@@ -601,37 +669,38 @@
             listContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding: 20px; font-size:0.85rem;">Belum ada catatan pada periode ini.</p>`;
         } else {
             filtered.forEach(item => {
+                const hasLab = item.cholTotal > 0 || item.uric > 0 || item.cholHdl > 0 || item.cholLdl > 0 || item.bloodSugar > 0;
                 const div = document.createElement('div');
                 div.className = 'history-item';
+                
+                let labHtml = '';
+                if (hasLab) {
+                    labHtml = `
+                        <div class="history-metric" style="border-top: 1px dashed var(--separator); padding-top: 6px; margin-top: 4px; grid-column: span 2;">
+                            <span>Hasil Lab (Kolesterol, Urat, Gula Darah)</span>
+                            <strong>Tot: ${item.cholTotal || '-'}</strong> | <strong>Urat: ${item.uric || '-'}</strong> | <strong>Gula: ${item.bloodSugar || '-'}</strong> ${getStatusBadge(item.bloodSugar, 'bloodSugar')}
+                        </div>
+                    `;
+                }
+
                 div.innerHTML = `
                     <div class="history-header">
                         <span>${item.timestamp}</span>
                         <button onclick="deleteData(${item.id})" class="delete-btn">Hapus</button>
                     </div>
-                    <div class="history-body">
+                    <div class="history-body ${hasLab ? 'with-lab' : ''}">
                         <div class="history-metric">
-                            <span>Tensi Darah</span>
-                            <strong>${item.sys} / ${item.dia}</strong> ${getStatusBadge(item.sys, 'sys')}
+                            <span>Tekanan Darah</span>
+                            <strong>${item.sys} / ${item.dia} mmHg</strong> ${getStatusBadge(item.sys, 'sys')}
                         </div>
-                        <div class="history-metric">
-                            <span>Asam Urat</span>
-                            <strong>${item.uric || '-'} mg/dL</strong> ${getStatusBadge(item.uric, 'uric')}
-                        </div>
-                        <div class="history-metric">
-                            <span>Kolesterol Total</span>
-                            <strong>${item.cholTotal || '-'} mg/dL</strong> ${getStatusBadge(item.cholTotal, 'cholTotal')}
-                        </div>
-                        <div class="history-metric">
-                            <span>HDL / LDL</span>
-                            <strong>${item.cholHdl || '-'}/${item.cholLdl || '-'}</strong>
-                        </div>
+                        ${!hasLab ? '<div class="history-metric"><span>Catatan Lab</span><strong>Tidak ada (Harian)</strong></div>' : ''}
+                        ${labHtml}
                     </div>
                 `;
                 listContainer.appendChild(div);
             });
         }
 
-        // Update Ringkasan Stat
         const summaryBox = document.getElementById('summaryStats');
         const selectedOptionText = document.getElementById('monthFilter').selectedOptions[0].text;
         document.getElementById('summaryTitle').textContent = `Rata-rata: ${selectedOptionText}`;
@@ -641,8 +710,12 @@
         } else {
             const avgSys = Math.round(filtered.reduce((a, c) => a + c.sys, 0) / filtered.length);
             const avgDia = Math.round(filtered.reduce((a, c) => a + c.dia, 0) / filtered.length);
-            const avgChol = Math.round(filtered.reduce((a, c) => a + (c.cholTotal || 0), 0) / filtered.length);
-            const avgUric = (filtered.reduce((a, c) => a + (c.uric || 0), 0) / filtered.length).toFixed(1);
+            
+            const sugarFiltered = filtered.filter(i => i.bloodSugar > 0);
+            const avgSugar = sugarFiltered.length > 0 ? Math.round(sugarFiltered.reduce((a, c) => a + c.bloodSugar, 0) / sugarFiltered.length) : '-';
+            
+            const uricFiltered = filtered.filter(i => i.uric > 0);
+            const avgUric = uricFiltered.length > 0 ? (uricFiltered.reduce((a, c) => a + c.uric, 0) / uricFiltered.length).toFixed(1) : '-';
 
             summaryBox.innerHTML = `
                 <div class="stat-card">
@@ -650,11 +723,11 @@
                     <p>${avgSys} / ${avgDia} <span style="font-size:0.75rem; color:var(--text-muted);">mmHg</span></p>
                 </div>
                 <div class="stat-card">
-                    <h3>Kolesterol Total</h3>
-                    <p>${avgChol} <span style="font-size:0.75rem; color:var(--text-muted);">mg/dL</span></p>
+                    <h3>Rata-rata Gula Darah</h3>
+                    <p>${avgSugar} <span style="font-size:0.75rem; color:var(--text-muted);">mg/dL</span></p>
                 </div>
                 <div class="stat-card">
-                    <h3>Asam Urat</h3>
+                    <h3>Rata-rata Asam Urat</h3>
                     <p>${avgUric} <span style="font-size:0.75rem; color:var(--text-muted);">mg/dL</span></p>
                 </div>
             `;
@@ -686,13 +759,14 @@
                         fill: true
                     },
                     {
-                        label: 'Asam Urat',
-                        data: sorted.map(i => i.uric),
-                        borderColor: '#007aff',
-                        backgroundColor: 'rgba(0, 122, 255, 0.05)',
+                        label: 'Gula Darah',
+                        data: sorted.map(i => i.bloodSugar > 0 ? i.bloodSugar : null),
+                        borderColor: '#34c759',
+                        backgroundColor: 'rgba(52, 199, 89, 0.05)',
                         borderWidth: 2.5,
                         tension: 0.3,
-                        fill: true
+                        spanGaps: true,
+                        fill: false
                     }
                 ]
             },
